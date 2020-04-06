@@ -25,7 +25,7 @@ class _ProductoPageState extends State<ProductoPage> {
   final productosBloc = ProductosBloc();
   final productosProvider = ProductosProvider();
 
-  bool _guardando = false;
+  // bool _guardando = false;
 
   File foto;
 
@@ -124,7 +124,10 @@ class _ProductoPageState extends State<ProductoPage> {
       textColor: Colors.white,
       label: Text('Guardar'),
       icon: Icon(Icons.save),
-      onPressed: _submit,
+      onPressed: (){
+        _submit();
+         
+      }
     );
   }
 
@@ -133,14 +136,11 @@ class _ProductoPageState extends State<ProductoPage> {
     if(!formKey.currentState.validate() )return;
 
     formKey.currentState.save();
-
-    setState(() { _guardando = true; });
+    
 
     if(foto != null){
 
      producto.fotoUrl = await productosProvider.subirImagen(foto, foto.path);
-      
-      
 
     }
 
@@ -155,6 +155,7 @@ class _ProductoPageState extends State<ProductoPage> {
 
     mostrarSnackbar('registro guardado');
     Navigator.pop(context);
+    
   }
 
   void mostrarSnackbar(String mensaje){
@@ -180,6 +181,10 @@ class _ProductoPageState extends State<ProductoPage> {
   }
 
   Widget _mostrarFoto(){
+
+    if(producto.fotoUrl != null){
+      return Image(image: NetworkImage(producto.fotoUrl));
+    }
 
     
 
@@ -213,6 +218,7 @@ class _ProductoPageState extends State<ProductoPage> {
       foto = await ImagePicker.pickImage(
       source: origen
     );
+
     if(foto != null){
       producto.fotoUrl = null;
       
