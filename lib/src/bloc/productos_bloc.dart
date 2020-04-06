@@ -36,14 +36,14 @@ class ProductosBloc {
 
   }
 
-  Future<String> subirFoto(File foto)async{
+  //Future<String> subirFoto(File foto)async{
 
-    _cargandoController.sink.add(true);
-    final fotoUrl = await _productosProvider.subirImagen(foto);
-    _cargandoController.sink.add(false);
+  //  _cargandoController.sink.add(true);
+  //  final fotoUrl = await _productosProvider.subirImagen(File image, String Path);
+  //  _cargandoController.sink.add(false);
 
-    return fotoUrl;
-  }
+  //  return fotoUrl;
+  //}
 
   void editarProducto(ProductoModel producto)async{
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:form_validation/src/bloc/productos_bloc.dart';
+import 'package:form_validation/src/providers/productos_provider.dart';
 
 import 'package:image_picker/image_picker.dart';
 
@@ -22,6 +23,7 @@ class _ProductoPageState extends State<ProductoPage> {
   //final productoProvider = new ProductosProvider();
 
   final productosBloc = ProductosBloc();
+  final productosProvider = ProductosProvider();
 
   bool _guardando = false;
 
@@ -134,10 +136,15 @@ class _ProductoPageState extends State<ProductoPage> {
 
     setState(() { _guardando = true; });
 
-    if ( foto != null ) {
-      producto.fotoUrl = await productosBloc.subirFoto(foto);
+    if(foto != null){
+
+     producto.fotoUrl = await productosProvider.subirImagen(foto, foto.path);
+      
+      
+
     }
 
+    
 
     if (producto.id == null) {
       productosBloc.agregarProducto(producto);
@@ -174,14 +181,11 @@ class _ProductoPageState extends State<ProductoPage> {
 
   Widget _mostrarFoto(){
 
-    if(producto.fotoUrl != null){
+    
 
-      return FadeInImage(
-        image: NetworkImage( producto.fotoUrl ),
-        placeholder: AssetImage('assets/cargando.gif'),
-        height: 300.0,
-        fit: BoxFit.contain,
-      );
+    if(foto != null){
+
+      return Image.file(foto);
       
     }else{
 
@@ -206,7 +210,7 @@ class _ProductoPageState extends State<ProductoPage> {
 
   _procesarImagen(ImageSource origen)async{
 
-    foto = await ImagePicker.pickImage(
+      foto = await ImagePicker.pickImage(
       source: origen
     );
     if(foto != null){

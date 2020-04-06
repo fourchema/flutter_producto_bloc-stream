@@ -2,15 +2,21 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:form_validation/src/preferencias_usuario/preferencias_usuario.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 
 
+
 import 'package:form_validation/src/models/producto_model.dart';
 
+
 class ProductosProvider {
+  
+  
 
   final String _url = 'https://flutter-console.firebaseio.com';
   final _prefs = new PreferenciasUsuario();
@@ -78,37 +84,53 @@ class ProductosProvider {
     return 1;
   }
 
-  Future<String> subirImagen( File imagen ) async {
+  Future subirImagen(File image, String path) async{
+      
+       FirebaseStorage _storage = FirebaseStorage.instance;
+       StorageReference firebaseStorageRef = _storage.ref().child(path);
 
-    final url = Uri.parse('https://api.cloudinary.com/v1_1/drixpz4yf/image/upload?upload_preset=dvyv6kf2');
-    final mimeType = mime(imagen.path).split('/'); //image/jpeg
-
-    final imageUploadRequest = http.MultipartRequest(
-      'POST',
-      url
-    );
-
-    final file = await http.MultipartFile.fromPath(
-      'file', 
-      imagen.path,
-      contentType: MediaType( mimeType[0], mimeType[1] )
-    );
-
-    imageUploadRequest.files.add(file);
+       StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
 
 
-    final streamResponse = await imageUploadRequest.send();
-    final resp = await http.Response.fromStream(streamResponse);
+       final StorageTaskSnapshot downloadUrl= await uploadTask.onComplete;
+       final String url = await downloadUrl.ref.getDownloadURL();
 
-    if ( resp.statusCode != 200 && resp.statusCode != 201 ) {
-      print('Algo salio mal');
-      print( resp.body );
-      return null;
+       print('Url Is $url');
+       return url;
+       
     }
-    final respData = json.decode(resp.body);
-    print( respData);
 
-    return respData['secure_url'];
-  }
+  //Future<String> subirImagen( File imagen ) async {
+
+  //  final url = Uri.parse('https://api.cloudinary.com/v1_1/drixpz4yf/image/upload?upload_preset=dvyv6kf2');
+  //  final mimeType = mime(imagen.path).split('/'); //image/jpeg
+
+  //  final imageUploadRequest = http.MultipartRequest(
+  //    'POST',
+ //     url
+  //  );
+
+  //  final file = await http.MultipartFile.fromPath(
+  //    'file', 
+  //    imagen.path,
+  //    contentType: MediaType( mimeType[0], mimeType[1] )
+  //  );
+
+  //  imageUploadRequest.files.add(file);
+
+
+  //  final streamResponse = await imageUploadRequest.send();
+  //  final resp = await http.Response.fromStream(streamResponse);
+
+  //  if ( resp.statusCode != 200 && resp.statusCode != 201 ) {
+  //    print('Algo salio mal');
+  //    print( resp.body );
+  //    return null;
+  //  }
+  //  final respData = json.decode(resp.body);
+  //  print( respData);
+
+  //  return respData['secure_url'];
+  //}
   
 }
