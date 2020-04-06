@@ -3,6 +3,7 @@ import 'package:form_validation/src/bloc/provider.dart';
 import 'package:form_validation/src/pages/home_page.dart';
 import 'package:form_validation/src/pages/login_page.dart';
 import 'package:form_validation/src/pages/producto_page.dart';
+import 'package:form_validation/src/pages/profilepage.dart';
 import 'package:form_validation/src/pages/registro_page.dart';
 import 'package:form_validation/src/preferencias_usuario/preferencias_usuario.dart';
  
@@ -30,12 +31,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
        debugShowCheckedModeBanner: false,
        title: 'Material App',
-       initialRoute: 'producto',
+       initialRoute: 'profile',
        routes: {
          'login' : (BuildContext context) => LoginPage(),
          'home'  : (BuildContext context) => HomePage(),
          'producto'  : (BuildContext context) => ProductoPage(),
          'registro' : (BuildContext context) => RegistroPage(),
+         'profile' : (BuildContext context) => ProfilePage(),
        },
        theme: ThemeData(
          primaryColor: Colors.deepPurple
